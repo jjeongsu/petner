@@ -1,8 +1,9 @@
 import type { Org } from './korOrg';
+import type { OrgType } from '@/types/shelter';
+type CityOrgKeyType = Org['orgdownNm'];
 
-type CityOrgKey = Org['orgdownNm'];
 // 각 시도 별 하위 지역 코드
-const CITY_ORG: Record<CityOrgKey, { uprCd: string; orgCd: string; orgdownNm: string }[]> = {
+const CITY_ORG: Record<CityOrgKeyType, OrgType[]> = {
   서울특별시: [
     {
       uprCd: '6110000',

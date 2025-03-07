@@ -112,7 +112,7 @@ const handleButtonClick = (upperOrgItem: UpperOrgType) => {
   refetch();
 };
 // 하위 지역이 바뀔때
-const handleDropDown = (orgItem) => {
+const handleDropDown = (orgItem: OrgType) => {
   org.value = orgItem;
   console.log('org.value', org.value);
   refetch();

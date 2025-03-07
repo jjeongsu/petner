@@ -19,14 +19,13 @@ export const getShelterListApi = async (upr_cd: string, org_cd: string) => {
 };
 
 export const getShelterInfo = async (careRegNumber: number | string) => {
-  console.log('보호소 번호', careRegNumber);
   try {
     const response = await shelterAPI.get('/shelterInfo', {
       params: {
         care_reg_no: careRegNumber,
       },
     });
-    console.log('보호소 정보 조회 응답 입니다', response.data.response);
+    console.log('보호소 정보 조회 응답 입니다', response.data.response, careRegNumber);
 
     return response.data.response;
   } catch (error) {

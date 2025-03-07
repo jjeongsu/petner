@@ -1,25 +1,84 @@
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, nextTick, watch, computed } from 'vue';
 import type { CSSProperties } from 'vue';
 import SouthKoreaMap from '@/assets/southKoreaHigh.svg';
 import PATH from '@/constants/path';
-import { ANIMAL_SHELTERS } from '@/constants/mock/animalShelter';
 import ShelterCard from './ShelterCard.vue';
+import CITY_ORG from '@/constants/api/cityOrg';
+import type { OrgType } from '@/types/shelter';
+import { useQuery } from '@tanstack/vue-query';
+import { getShelterListApi, getShelterInfo } from '@/apis/adoption/shelter';
 
-const selectedRegion = ref('');
+const selectedRegion = ref('서울특별시');
+const cityOrgList = ref<OrgType[]>([]); // 구, 군 리스트
+
+watch(selectedRegion, (newV, oldV) => {
+  //선택된 지역이 CITY_ORG의 key안에없다면
+  if (!Object.keys(CITY_ORG).includes(selectedRegion.value)) {
+    return;
+  }
+  // 선택된 상위 region에 대한 모든 보호소 를 조회
+  cityOrgList.value = [...CITY_ORG[newV]]; // 하위 orgList
+  //console.log('cityOrgList', cityOrgList.value);
+  refetch();
+});
+
+// 1. 모든 구군에 대한 간소화된 shleterList를 얻는다.
+const {
+  data: shelters,
+  isLoading: isLoadingShelters,
+  refetch,
+} = useQuery({
+  queryKey: ['shelters', 'list', selectedRegion],
+  queryFn: () =>
+    Promise.all(cityOrgList.value.map((org) => getShelterListApi(org.uprCd, org.orgCd))),
+});
+// 다음쿼리가 실행될 준비가 되었는지 확인한다.
+const enabled = computed(() => {
+  console.log('shelters value', shelters.value);
+  if (shelters.value && (shelters.value.length > 0 || shelters.value !== undefined)) {
+    return true;
+  }
+  return false;
+});
+
+// 2. 보호소 별 상세정보를 조회
+const {
+  data: shelterDetails,
+  isLoading: isLoadingShelterDetails,
+  // refetch,
+} = useQuery({
+  queryKey: ['shelterDetails', 'list', selectedRegion],
+  queryFn: () => {
+    console.log('두번째 쿼리가 작동', '원본 shelters', shelters.value);
+    //
+    const flatShelters = computed(() => shelters.value?.flatMap((A) => A));
+
+    return Promise.all(flatShelters.value!.map((shelter) => getShelterInfo(shelter.careRegNo)));
+  },
+  enabled, // 준비 완료시 queryFn 실행
+});
+
+const shelterInfoList = computed(() => {
+  const result = shelterDetails.value
+    ?.map((data) => data.body.items.item)
+    .filter((v) => v != undefined);
+  console.log('result', result);
+  return result;
+});
 const tooltipText = ref('');
 const tooltipStyle = ref<CSSProperties>({
   position: 'absolute',
   top: '0px',
   left: '0px',
   background: 'var(--secondary-green)',
-  padding: '6px 12px', 
+  padding: '6px 12px',
   borderRadius: '6px',
   fontSize: '16px',
   color: 'var(--gray-1)',
   pointerEvents: 'none',
   zIndex: '10',
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)', 
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
   transition: 'opacity 0.2s ease-in-out, transform 0.2s ease-in-out',
   opacity: '0',
 });
@@ -91,15 +150,21 @@ onMounted(() => {
       <div class="shelter-info-wrapper">
         <div class="shelter-title-card mb-3">
           <span
-            >동물보호센터 <em>{{ ANIMAL_SHELTERS.length }}</em
+            >{{ selectedRegion }} 동물보호센터 <em>{{ shelterInfoList?.length }}</em
             >개소</span
           >
         </div>
-        <div class="overflow-scroll">
+        <div
+          v-if="isLoadingShelterDetails || isLoadingShelters"
+          class="d-flex justify-items-center"
+        >
+          로딩중
+        </div>
+        <div class="card-list-wrapper">
           <ShelterCard
-            v-for="shelter in ANIMAL_SHELTERS"
+            v-for="shelter in shelterInfoList"
             :key="shelter.careNm"
-            :shelter="shelter"
+            :shelter="shelter[0]"
           />
         </div>
       </div>
@@ -153,5 +218,10 @@ onMounted(() => {
 .shelter-title-card span em {
   font-style: normal;
   color: var(--primary-red);
+}
+
+.card-list-wrapper {
+  height: 545px;
+  overflow-y: scroll;
 }
 </style>
