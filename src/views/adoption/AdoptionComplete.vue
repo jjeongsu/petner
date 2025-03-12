@@ -18,7 +18,7 @@ import PATH from '@/constants/path';
           조금만 기다려 주세요. 당신의 선택을 진심으로 응원합니다.
         </span>
       </div>
-      <img src="/public/PNG-Image/images/hand-pow.png" alt="hand and pow image" class="hand-img" />
+      <img src="/PNG-Image/images/hand-pow.png" alt="hand and pow image" class="hand-img" />
     </div>
     <div class="d-flex justify-content-between content-wrapper">
       <div>
@@ -28,7 +28,7 @@ import PATH from '@/constants/path';
         <CampaignCard
           width="300px"
           height="200px"
-          imageUrl="/public/PNG-Image/images/adoption-after.png"
+          imageUrl="/PNG-Image/images/adoption-after.png"
           :linkTo="PATH.community"
         >
           <template #subTitle>
@@ -38,7 +38,7 @@ import PATH from '@/constants/path';
         <CampaignCard
           width="300px"
           height="200px"
-          imageUrl="/public/PNG-Image/images/adoption-friends.png"
+          imageUrl="/PNG-Image/images/adoption-friends.png"
           :linkTo="PATH.adoptionSearch"
         >
           <template #subTitle>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ShelterKakaoMap from '@/components/adoption/shelter/ShelterKakaoMap.vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { ref, computed } from 'vue';
 import PlannerModal from './PlannerModal.vue';
@@ -73,7 +73,6 @@ export type DetailCard =
 const { detail } = defineProps<{ detail: DetailCard }>();
 const router = useRouter();
 const authStore = useAuthStore();
-const route = useRoute();
 
 // PlannerModal 관련 상태
 const isPlannerVisible = ref(false);
@@ -435,10 +434,12 @@ function formatPolicy(text: string | null): string {
       </div>
 
       <div class="bi bi-geo-alt fa-s text-secondary-red fs-5">
-        <span class="ms-1 text-gray-7"> {{ detail?.addr1 ?? '-' }}</span>
+        <span class="ms-1 text-gray-7">
+          {{ detail?.addr1 ? formatPolicy(detail.addr1) : '-' }}</span
+        >
       </div>
       <div class="bi bi-telephone fa-s text-secondary-red fs-5">
-        <span class="ms-1 text-gray-7"> {{ detail?.tel ?? '-' }}</span>
+        <span class="ms-1 text-gray-7"> {{ detail?.tel ? formatPolicy(detail.tel) : '-' }}</span>
       </div>
       <div class="bi bi-house fa-s text-secondary-red fs-5">
         <span class="ms-1 text-gray-7">
@@ -451,7 +452,7 @@ function formatPolicy(text: string | null): string {
         <h2 class="mb-3 fs-4">소개</h2>
 
         <p class="fs-7">
-          {{ detail?.overview ?? '소개글 없음' }}
+          {{ detail?.overview ? formatPolicy(detail.overview) : '-' }}
         </p>
         <div class="d-flex align-items-center justify-content-between mt-5">
           <h2 class="fs-5">문의 및 안내</h2>
