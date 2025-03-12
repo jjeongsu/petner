@@ -1,4 +1,79 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from 'vue';
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  type ChartData,
+  type ChartOptions,
+} from 'chart.js';
+import { Bar } from 'vue-chartjs';
+
+const data: ChartData<'bar'> = {
+  labels: ['2019', '2020', '2021', '2022', '2023'],
+  datasets: [
+    {
+      label: '입양',
+      data: [26.4, 29.6, 32.1, 27.5, 24.2],
+      backgroundColor: 'rgba(95, 170, 104, 0.8)',
+    },
+    {
+      label: '사망',
+      data: [46.6, 45.9, 41.5, 43.7, 45.8],
+      backgroundColor: 'rgba(243, 114, 63, 0.8)',
+    },
+  ],
+};
+const options: ChartOptions<'bar'> = {
+  responsive: true,
+  maintainAspectRatio: false,
+  animation: {
+    duration: 1500,
+  },
+  scales: {
+    y: {
+      offset: true,
+      title: {
+        text: '비율(%)',
+        font: { family: 'Paperlogy', size: 16, weight: 'bolder' },
+      },
+      min: 20,
+      max: 50,
+      ticks: {
+        display: true,
+        font: { family: 'Paperlogy', size: 16, weight: 'bolder' },
+      },
+    },
+    x: {
+      offset: true,
+      title: {
+        text: '연도',
+        font: { family: 'Paperlogy', size: 16, weight: 'bolder' },
+      },
+      ticks: {
+        font: { family: 'Paperlogy', size: 16, weight: 'bolder' },
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      display: true,
+      position: 'bottom',
+      labels: {
+        usePointStyle: true,
+        pointStyle: 'circle',
+        font: { family: 'Paperlogy', size: 14, weight: 'bold' },
+      },
+    },
+  },
+};
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+</script>
 
 <template>
   <div class="banner-wrapper">
@@ -18,8 +93,7 @@
       </div>
     </div>
     <div class="banner-graph">
-      <!-- TRY : Chart.js 로 구현해보기 -->
-      <img src="/PNG-Image/images/adoption-chart.png" alert="adoption data graph" />
+      <Bar :data="data" :options="options"></Bar>
     </div>
   </div>
 </template>
