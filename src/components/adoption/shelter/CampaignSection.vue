@@ -18,7 +18,7 @@ const CARD_HEIGHT = '300px';
         <CampaignCard
           :width="CARD_WIDTH"
           :height="CARD_HEIGHT"
-          image-url="/public/Campaign/campaign-tossbank.png"
+          image-url="/Campaign/campaign-tossbank.png"
           :linkTo="CAMPAIGN_LINKS.toss"
           :hasFilter="true"
         >
@@ -32,7 +32,7 @@ const CARD_HEIGHT = '300px';
         <CampaignCard
           :width="CARD_WIDTH"
           :height="CARD_HEIGHT"
-          image-url="/public/Campaign/campagin-game.png"
+          image-url="/Campaign/campagin-game.png"
           :linkTo="CAMPAIGN_LINKS.togetheron"
           :hasFilter="true"
         >
@@ -54,14 +54,14 @@ const CARD_HEIGHT = '300px';
         <CampaignCard
           :width="CARD_WIDTH"
           :height="CARD_HEIGHT"
-          image-url="/public/Campaign/volunteer1.png"
+          image-url="/Campaign/volunteer1.png"
           :linkTo="CAMPAIGN_LINKS.luppyworld"
         />
 
         <CampaignCard
           :width="CARD_WIDTH"
           :height="CARD_HEIGHT"
-          image-url="/public/Campaign/volunteer2.png"
+          image-url="/Campaign/volunteer2.png"
           :linkTo="CAMPAIGN_LINKS.balunteer"
         />
       </div>
